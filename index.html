@@ -603,11 +603,23 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
      SOUND PRESETS
      =========================== */
   const PRESETS = {
-    beep: {label:'Beep', src:null}, // will use WebAudio beep
-    alarm: {label:'Alarma', src:'https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg'},
-    gong: {label:'Gong', src:'https://actions.google.com/sounds/v1/alarms/gong.ogg'},
-    bell: {label:'Campana', src:'https://actions.google.com/sounds/v1/alarms/bugle_call.ogg'}
-  };
+  beep:   { label:'Beep', src:'sounds/beep.ogg' },
+  alarm:  { label:'Alarma', src:'sounds/alarm.ogg' },
+  gong:   { label:'Gong', src:'sounds/gong.ogg' },
+  bell:   { label:'Campanita', src:'sounds/bell.ogg' },
+  click:  { label:'Click', src:'sounds/click.ogg' },
+  notif:  { label:'Notificación', src:'sounds/notif.ogg' },
+  ring:   { label:'Timbre', src:'sounds/ring.ogg' },
+  drum:   { label:'Tambor', src:'sounds/drum.ogg' },
+  laser:  { label:'Laser', src:'sounds/laser.ogg' },
+  pop:    { label:'Pop', src:'sounds/pop.ogg' },
+  tick:   { label:'Tick', src:'sounds/tick.ogg' },
+  woosh:  { label:'Woosh', src:'sounds/woosh.ogg' },
+  zap:    { label:'Zap', src:'sounds/zap.ogg' },
+  ding:   { label:'Ding', src:'sounds/ding.ogg' },
+  buzz:   { label:'Buzz', src:'sounds/buzz.ogg' }
+};
+
 
   function playBeep(){
     try{
@@ -1152,4 +1164,5 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
 </html>
 <!DOCTYPE html>
 <html lang="es">
+
 
