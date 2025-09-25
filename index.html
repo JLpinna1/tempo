@@ -603,22 +603,28 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
      SOUND PRESETS
      =========================== */
   const PRESETS = {
-  beep:   { label:'Beep', src:'sounds/beep.ogg' },
-  alarm:  { label:'Alarma', src:'sounds/alarm.ogg' },
-  gong:   { label:'Gong', src:'sounds/gong.ogg' },
-  bell:   { label:'Campanita', src:'sounds/bell.ogg' },
-  click:  { label:'Click', src:'sounds/click.ogg' },
-  notif:  { label:'Notificación', src:'sounds/notif.ogg' },
-  ring:   { label:'Timbre', src:'sounds/ring.ogg' },
-  drum:   { label:'Tambor', src:'sounds/drum.ogg' },
-  laser:  { label:'Laser', src:'sounds/laser.ogg' },
-  pop:    { label:'Pop', src:'sounds/pop.ogg' },
-  tick:   { label:'Tick', src:'sounds/tick.ogg' },
-  woosh:  { label:'Woosh', src:'sounds/woosh.ogg' },
-  zap:    { label:'Zap', src:'sounds/zap.ogg' },
-  ding:   { label:'Ding', src:'sounds/ding.ogg' },
-  buzz:   { label:'Buzz', src:'sounds/buzz.ogg' }
+  airhorn:   { label:'Air Horn', src:'sounds/air-horn-sound-effect-372453.mp3' },
+  alarm2:    { label:'Alarma 2', src:'sounds/alarm-2-375697.mp3' },
+  alarmclk:  { label:'Reloj', src:'sounds/alarm-clock-90867.mp3' },
+  alarmshort:{ label:'Alarma corta', src:'sounds/alarm-clock-short-6402.mp3' },
+  cannon:    { label:'Cañón', src:'sounds/cannon-fire-161072.mp3' },
+  carhorn:   { label:'Bocina auto', src:'sounds/car-horns-153261.mp3' },
+  club:      { label:'Club alarma', src:'sounds/club-alarma-145490.mp3' },
+  dramatic:  { label:'Golpe dramático', src:'sounds/dramatic-stab-80s-hip-hop-hype-410088.mp3' },
+  explosion1:{ label:'Explosión 1', src:'sounds/explosion-42132.mp3' },
+  explosion2:{ label:'Explosión 2', src:'sounds/explosion-80108.mp3' },
+  explosion3:{ label:'Explosión FX', src:'sounds/explosion-fx-343683.mp3' },
+  explosion4:{ label:'Explosión SFX', src:'sounds/explosion-sfx-405455.mp3' },
+  funny:     { label:'Alarma graciosa', src:'sounds/funny-alarm-317531.mp3' },
+  house:     { label:'Reloj despertador', src:'sounds/house_alarm-clock_loud-92419.mp3' },
+  massive:   { label:'Explosión masiva', src:'sounds/massive-explosion-2-397983.mp3' },
+  mega:      { label:'Mega Horn', src:'sounds/mega-horn-398654.mp3' },
+  tick:      { label:'Tick reloj', src:'sounds/slow-cinematic-clock-ticking-357979.mp3' },
+  tick2:     { label:'Tick reloj 2', src:'sounds/slow-cinematic-clock-ticking-405471.mp3' },
+  woosh:     { label:'Woosh', src:'sounds/woosh-hit-163595.mp3' },
+  vinyl:     { label:'Parada vinilo', src:'sounds/vinyl-stop-sound-effect-241388.mp3' }
 };
+
 
 
   function playBeep(){
@@ -1154,29 +1160,26 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
       themeToggle.textContent = "🌙";
       localStorage.setItem("theme", "light");
     }
-  });
-  function playSound(soundObj) {
-  if (soundObj.type === 'preset' && soundObj.id in PRESETS) {
-    const src = PRESETS[soundObj.id].src;
-    if (src) {
-      const audio = new Audio(src);
-      audio.play();
-    } else {
-      // lógica de beep interno si src es null
-    }
+  });  
+  function playSound(sound){
+  if(!sound) { playBeep(); return; }
+  if(sound.type === 'preset'){
+    const p = PRESETS[sound.id];
+    if(!p) { playBeep(); return; }
+    if(p.src){ new Audio(p.src).play().catch(()=>{}); }
+    else playBeep();
+  } else if(sound.type === 'custom'){
+    try{ new Audio(sound.data).play().catch(()=>{}); } catch(e){ console.warn(e); playBeep(); }
   }
-  // manejo de archivos personalizados también
 }
 
-
-  
-  
 </script>
 
 </body>
 </html>
 <!DOCTYPE html>
 <html lang="es">
+
 
 
 
