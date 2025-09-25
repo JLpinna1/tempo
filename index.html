@@ -1155,6 +1155,19 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
       localStorage.setItem("theme", "light");
     }
   });
+  function playSound(soundObj) {
+  if (soundObj.type === 'preset' && soundObj.id in PRESETS) {
+    const src = PRESETS[soundObj.id].src;
+    if (src) {
+      const audio = new Audio(src);
+      audio.play();
+    } else {
+      // lógica de beep interno si src es null
+    }
+  }
+  // manejo de archivos personalizados también
+}
+
 
   
   
@@ -1164,5 +1177,6 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
 </html>
 <!DOCTYPE html>
 <html lang="es">
+
 
 
