@@ -116,12 +116,13 @@ body.dark-mode {
   top: 6px;
   right: 6px;
   border-radius: 50%;
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 2px 6px;
+  font-size: 14px;
   background: var(--danger);
   color: #fff;
   cursor: pointer;
 }
+
 
 
 /* 🌍 Fondo y texto */
@@ -690,10 +691,13 @@ const PRESETS = {
   function renderTimers(){
     timersListEl.innerHTML = '';
     state.timers.forEach((t, index) => {
-      const row = document.createElement('div');
-      row.className = 'timer-row card';
-      row.draggable = true;
-      row.dataset.id = t.id;
+const row = document.createElement('div');
+row.className = 'timer-row card';
+row.draggable = true;
+row.dataset.id = t.id;
+
+// 👇 Aseguramos que sea relativo
+row.style.position = 'relative';
 
       const left = document.createElement('div');
       left.innerHTML = `<div class="drag-handle">☰</div><div class="time-big" id="time-${t.id}">${secondsToHMS(Math.ceil(t.remainingSec))}</div>
@@ -777,8 +781,16 @@ const PRESETS = {
       });
       // eliminar botón
 
-      const delBtn = document.createElement('button'); delBtn.className='btn btn-danger'; delBtn.textContent='Eliminar';
-      delBtn.addEventListener('click', ()=> { state.timers = state.timers.filter(x=>x.id!==t.id); saveState(); renderTimers(); });
+// botón X arriba a la derecha (por temporizador)
+const delBtn = document.createElement('button');
+delBtn.className = 'btn-eliminar-top';
+delBtn.textContent = '✕';
+delBtn.addEventListener('click', ()=> { 
+  state.timers = state.timers.filter(x=>x.id!==t.id); 
+  saveState(); 
+  renderTimers(); 
+});
+row.appendChild(delBtn);
 
       right.appendChild(startBtn); right.appendChild(resetBtn); right.appendChild(delBtn);
 
@@ -1221,6 +1233,7 @@ function stopAlarmLoop(){
 </html>
 <!DOCTYPE html>
 <html lang="es">
+
 
 
 
