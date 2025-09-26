@@ -111,6 +111,18 @@ body.dark-mode {
   --button-secondary: #333;
   --button-secondary-hover: #444;
 }
+.btn-eliminar-top {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+  background: var(--danger);
+  color: #fff;
+  cursor: pointer;
+}
+
 
 /* 🌍 Fondo y texto */
 body {
@@ -632,6 +644,7 @@ const PRESETS = {
 
 
 
+
   function playBeep(){
     try{
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -747,13 +760,22 @@ const PRESETS = {
       const startBtn = document.createElement('button'); startBtn.className='btn';
       startBtn.classList.add(t.active? 'btn-pause' : 'btn-start'); startBtn.textContent = t.active? 'Pausar' : 'Comenzar';
       startBtn.addEventListener('click', ()=> {
-        t.active = !t.active;
-        if(t.active) ensureTimersTicker();
-        saveState(); renderTimers();
+      if(t.active){ 
+      stopAlarmLoop(); // 🔇 detener si estaba sonando
+      }
+      t.active = !t.active;
+      if(t.active) ensureTimersTicker();
+      saveState(); renderTimers();
       });
 
       const resetBtn = document.createElement('button'); resetBtn.className='btn btn-reset'; resetBtn.textContent='Reset';
-      resetBtn.addEventListener('click', ()=> { t.remainingSec = t.durationSec; t.active=false; saveState(); renderTimers(); });
+      resetBtn.addEventListener('click', ()=> { 
+      t.remainingSec = t.durationSec; 
+      t.active=false; 
+      stopAlarmLoop(); // 🔇 detener sonido
+      saveState(); renderTimers(); 
+      });
+      // eliminar botón
 
       const delBtn = document.createElement('button'); delBtn.className='btn btn-danger'; delBtn.textContent='Eliminar';
       delBtn.addEventListener('click', ()=> { state.timers = state.timers.filter(x=>x.id!==t.id); saveState(); renderTimers(); });
@@ -804,10 +826,11 @@ const PRESETS = {
       state.timers.forEach(t => {
         if(t.active){
           t.remainingSec = Math.max(0, t.remainingSec - 1);
-          if(t.remainingSec <= 0){
-            t.active = false;
-            playSound(t.sound);
+         if(t.remainingSec <= 0){
+           t.active = false;
+           startAlarmLoop(t.sound); // 🔔 empieza a sonar en bucle
           }
+
         }
       });
       saveState();
@@ -1177,6 +1200,20 @@ const PRESETS = {
     try{ new Audio(sound.data).play().catch(()=>{}); } catch(e){ console.warn(e); playBeep(); }
   }
 }
+let alarmInterval = null;
+function startAlarmLoop(sound){
+  stopAlarmLoop(); // por si ya había uno activo
+  alarmInterval = setInterval(()=> playSound(sound), 2000); // cada 2s
+}
+
+function stopAlarmLoop(){
+  if(alarmInterval){
+    clearInterval(alarmInterval);
+    alarmInterval = null;
+  }
+}
+
+
 
 </script>
 
@@ -1184,6 +1221,9 @@ const PRESETS = {
 </html>
 <!DOCTYPE html>
 <html lang="es">
+
+
+
 
 
 
