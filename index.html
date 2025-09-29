@@ -19,9 +19,177 @@
     *{box-sizing:border-box;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
     body{margin:0;background:var(--bg);color:#0f172a;-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
     .wrap{max-width:1100px;margin:28px auto;padding:18px;}
-    header.page{display:flex;gap:12px;align-items:end;margin-bottom:18px;}
+    header.page{display:flex;gap:12px;align-items:end;margin-bottom:18px;justify-content:space-between;}
     h1{margin:0;font-size:20px}
     .subtitle{color:var(--muted);font-size:13px}
+    
+    /* Auth styles */
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .auth-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .login-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+    .login-btn:hover {
+      background: var(--accent-600);
+    }
+    .register-btn {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .register-btn:hover {
+      background: var(--glass);
+    }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    .logout-btn {
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      text-decoration: underline;
+    }
+    
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+      color: #222222;
+    }
+    .modal-close {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #888888;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333333;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #dddddd;
+      font-size: 14px;
+      background-color: #1e1e1e;
+      color: #ffffff;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #0ea5a4;
+      box-shadow: 0 0 0 2px rgba(14,165,164,0.2);
+    }
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      background: #0ea5a4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .form-submit:hover {
+      background: #0b8f86;
+    }
+    .form-footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 14px;
+      color: #666666;
+    }
+    .form-footer a {
+      color: #0ea5a4;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+    .error-message {
+      color: #ef4444;
+      font-size: 13px;
+      margin-top: 4px;
+      font-weight: 500;
+    }
 
     /* Tabs */
     .tabs{display:flex;gap:8px;margin-top:8px}
@@ -460,8 +628,79 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
         <h1>Reloj & Temporizadores</h1>
         <div class="subtitle">Temporizadores múltiples, cronógrafo y reloj mundial con búsqueda y banderas.</div>
       </div>
-      <div style="margin-left:auto" class="small-muted">Guardado localmente en tu navegador</div>
+      <div style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+        <div class="small-muted">Guardado localmente en tu navegador</div>
+        <div class="auth-buttons" id="auth-container">
+          <button class="auth-btn login-btn" id="login-btn">Iniciar sesión</button>
+          <button class="auth-btn register-btn" id="register-btn">Registrarse</button>
+        </div>
+        <div class="user-info" id="user-info" style="display: none;">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <span id="username-display"></span>
+          <button class="logout-btn" id="logout-btn">Cerrar sesión</button>
+        </div>
+      </div>
     </header>
+
+</div>
+    
+    <!-- Modal de inicio de sesión -->
+    <div class="modal-overlay" id="login-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Iniciar sesión</h3>
+          <button class="modal-close" id="close-login-modal">&times;</button>
+        </div>
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-email">Correo electrónico</label>
+            <input type="email" id="login-email" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="login-password">Contraseña</label>
+            <input type="password" id="login-password" class="form-input" required>
+          </div>
+          <div id="login-error" class="error-message" style="display: none;"></div>
+          <button type="submit" class="form-submit">Iniciar sesión</button>
+          <div class="form-footer">
+            ¿No tienes una cuenta? <a id="switch-to-register">Regístrate</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Modal de registro -->
+    <div class="modal-overlay" id="register-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 class="modal-title">Crear cuenta</h3>
+          <button class="modal-close" id="close-register-modal">&times;</button>
+        </div>
+        <form id="register-form">
+          <div class="form-group">
+            <label class="form-label" for="register-name">Nombre</label>
+            <input type="text" id="register-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="register-email">Correo electrónico</label>
+            <input type="email" id="register-email" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="register-password">Contraseña</label>
+            <input type="password" id="register-password" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="register-confirm-password">Confirmar contraseña</label>
+            <input type="password" id="register-confirm-password" class="form-input" required>
+          </div>
+          <div id="register-error" class="error-message" style="display: none;"></div>
+          <button type="submit" class="form-submit">Registrarse</button>
+          <div class="form-footer">
+            ¿Ya tienes una cuenta? <a id="switch-to-login">Inicia sesión</a>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <div class="tabs" role="tablist" aria-label="Secciones">
       <button class="tab-btn active" id="tabTimersBtn" data-tab="timers">Temporizadores</button>
@@ -548,6 +787,186 @@ div[style*="#fff"], input[style*="#fff"], .card[style*="#fff"] {
     <footer class="foot">-------------versión 1.0.8-------------</footer>
   </div>
 
+  <script>
+    // Código de autenticación
+    document.addEventListener('DOMContentLoaded', function() {
+      // Referencias a elementos DOM
+      const loginBtn = document.getElementById('login-btn');
+      const registerBtn = document.getElementById('register-btn');
+      const loginModal = document.getElementById('login-modal');
+      const registerModal = document.getElementById('register-modal');
+      const closeLoginModal = document.getElementById('close-login-modal');
+      const closeRegisterModal = document.getElementById('close-register-modal');
+      const switchToRegister = document.getElementById('switch-to-register');
+      const switchToLogin = document.getElementById('switch-to-login');
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const authContainer = document.getElementById('auth-container');
+      const userInfo = document.getElementById('user-info');
+      const userAvatar = document.getElementById('user-avatar');
+      const usernameDisplay = document.getElementById('username-display');
+      const logoutBtn = document.getElementById('logout-btn');
+      const loginError = document.getElementById('login-error');
+      const registerError = document.getElementById('register-error');
+
+      // Comprobar si hay un usuario en localStorage al cargar la página
+      checkAuthStatus();
+
+      // Event listeners para abrir/cerrar modales
+      loginBtn.addEventListener('click', () => {
+        loginModal.classList.add('active');
+      });
+
+      registerBtn.addEventListener('click', () => {
+        registerModal.classList.add('active');
+      });
+
+      closeLoginModal.addEventListener('click', () => {
+        loginModal.classList.remove('active');
+      });
+
+      closeRegisterModal.addEventListener('click', () => {
+        registerModal.classList.remove('active');
+      });
+
+      // Cambiar entre modales
+      switchToRegister.addEventListener('click', () => {
+        loginModal.classList.remove('active');
+        registerModal.classList.add('active');
+      });
+
+      switchToLogin.addEventListener('click', () => {
+        registerModal.classList.remove('active');
+        loginModal.classList.add('active');
+      });
+
+      // Cerrar modales al hacer clic fuera
+      window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+          loginModal.classList.remove('active');
+        }
+        if (e.target === registerModal) {
+          registerModal.classList.remove('active');
+        }
+      });
+
+      // Manejar envío del formulario de inicio de sesión
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        
+        // Obtener usuarios del localStorage
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // Buscar usuario
+        const user = users.find(u => u.email === email && u.password === password);
+        
+        if (user) {
+          // Guardar sesión
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          
+          // Actualizar UI
+          updateUIForLoggedInUser(user);
+          
+          // Cerrar modal
+          loginModal.classList.remove('active');
+          
+          // Limpiar formulario
+          loginForm.reset();
+        } else {
+          // Mostrar error
+          loginError.textContent = 'Correo electrónico o contraseña incorrectos';
+          loginError.style.display = 'block';
+        }
+      });
+
+      // Manejar envío del formulario de registro
+      registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+        
+        // Validar contraseñas
+        if (password !== confirmPassword) {
+          registerError.textContent = 'Las contraseñas no coinciden';
+          registerError.style.display = 'block';
+          return;
+        }
+        
+        // Obtener usuarios existentes
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // Verificar si el correo ya está registrado
+        if (users.some(u => u.email === email)) {
+          registerError.textContent = 'Este correo electrónico ya está registrado';
+          registerError.style.display = 'block';
+          return;
+        }
+        
+        // Crear nuevo usuario
+        const newUser = {
+          id: Date.now().toString(),
+          name,
+          email,
+          password,
+          createdAt: new Date().toISOString()
+        };
+        
+        // Guardar usuario
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Iniciar sesión automáticamente
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        
+        // Actualizar UI
+        updateUIForLoggedInUser(newUser);
+        
+        // Cerrar modal
+        registerModal.classList.remove('active');
+        
+        // Limpiar formulario
+        registerForm.reset();
+      });
+
+      // Manejar cierre de sesión
+      logoutBtn.addEventListener('click', () => {
+        // Eliminar sesión
+        localStorage.removeItem('currentUser');
+        
+        // Actualizar UI
+        authContainer.style.display = 'flex';
+        userInfo.style.display = 'none';
+      });
+
+      // Función para comprobar estado de autenticación
+      function checkAuthStatus() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
+        if (currentUser) {
+          updateUIForLoggedInUser(currentUser);
+        }
+      }
+
+      // Función para actualizar UI cuando hay un usuario logueado
+      function updateUIForLoggedInUser(user) {
+        // Ocultar botones de login/registro
+        authContainer.style.display = 'none';
+        
+        // Mostrar info de usuario
+        userInfo.style.display = 'flex';
+        
+        // Actualizar avatar con inicial
+        userAvatar.textContent = user.name.charAt(0).toUpperCase();
+        
+        // Mostrar nombre de usuario
+        usernameDisplay.textContent = user.name;
+      }
+    });
+  </script>
   <script>
   /* ===========================
      CONFIG
@@ -1225,7 +1644,193 @@ function stopAlarmLoop(){
   }
 }
 
+// Referencias a elementos DOM para autenticación
+const loginBtn = document.getElementById('loginBtn');
+const registerBtn = document.getElementById('registerBtn');
+const userInfo = document.getElementById('userInfo');
+const userName = document.getElementById('userName');
+const logoutBtn = document.getElementById('logoutBtn');
+const loginModal = document.getElementById('loginModal');
+const registerModal = document.getElementById('registerModal');
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const loginError = document.getElementById('loginError');
+const registerError = document.getElementById('registerError');
+const switchToRegister = document.getElementById('switchToRegister');
+const switchToLogin = document.getElementById('switchToLogin');
 
+// Evento para abrir modal de inicio de sesión
+loginBtn.addEventListener('click', function() {
+  loginModal.classList.add('active');
+});
+
+// Evento para abrir modal de registro
+registerBtn.addEventListener('click', function() {
+  registerModal.classList.add('active');
+});
+
+// Eventos para cerrar modales al hacer clic fuera
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      overlay.classList.remove('active');
+    }
+  });
+});
+
+// Eventos para cerrar modales con botón X
+document.querySelectorAll('.modal-close').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.modal-overlay').classList.remove('active');
+  });
+});
+
+// Eventos para cambiar entre modales
+switchToRegister.addEventListener('click', function() {
+  loginModal.classList.remove('active');
+  registerModal.classList.add('active');
+});
+
+switchToLogin.addEventListener('click', function() {
+  registerModal.classList.remove('active');
+  loginModal.classList.add('active');
+});
+
+// Función para manejar el inicio de sesión
+loginForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+  const errorElement = document.getElementById('loginError');
+  
+  // Obtener usuarios
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+  
+  // Buscar usuario
+  const user = users.find(u => u.email === email && u.password === password);
+  
+  if (user) {
+    // Guardar sesión
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    
+    // Actualizar UI
+    updateUIForLoggedInUser(user);
+    
+    // Cerrar modal
+    loginModal.classList.remove('active');
+    
+    // Limpiar formulario
+    loginForm.reset();
+  } else {
+    errorElement.textContent = 'Correo electrónico o contraseña incorrectos';
+  }
+});
+
+// Función para manejar el registro
+registerForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const name = document.getElementById('registerName').value;
+  const email = document.getElementById('registerEmail').value;
+  const password = document.getElementById('registerPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const errorElement = document.getElementById('registerError');
+  
+  // Validar que las contraseñas coincidan
+  if (password !== confirmPassword) {
+    errorElement.textContent = 'Las contraseñas no coinciden';
+    return;
+  }
+  
+  // Obtener usuarios existentes o inicializar array
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  
+  // Verificar si el correo ya existe
+  const userExists = users.some(user => user.email === email);
+  if (userExists) {
+    errorElement.textContent = 'Este correo electrónico ya está registrado';
+    return;
+  }
+  
+  // Crear nuevo usuario
+  const newUser = {
+    id: Date.now().toString(),
+    name,
+    email,
+    password // En una aplicación real, la contraseña debería estar encriptada
+  };
+  
+  // Guardar usuario
+  users.push(newUser);
+  localStorage.setItem('users', JSON.stringify(users));
+  
+  // Iniciar sesión automáticamente
+  localStorage.setItem('currentUser', JSON.stringify(newUser));
+  
+  // Actualizar UI
+  updateUIForLoggedInUser(newUser);
+  
+  // Cerrar modal
+  registerModal.classList.remove('active');
+  
+  // Limpiar formulario
+  registerForm.reset();
+});
+
+// Función para cerrar sesión
+logoutBtn.addEventListener('click', function() {
+  localStorage.removeItem('currentUser');
+  updateUIForLoggedInUser(null);
+});
+
+// Función para verificar estado de autenticación al cargar la página
+function checkAuthStatus() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  updateUIForLoggedInUser(currentUser);
+}
+
+// Función para actualizar la UI según el estado de autenticación
+function updateUIForLoggedInUser(user) {
+  if (user) {
+    loginBtn.style.display = 'none';
+    registerBtn.style.display = 'none';
+    userInfo.style.display = 'flex';
+    userName.textContent = user.name;
+  } else {
+    loginBtn.style.display = 'inline-block';
+    registerBtn.style.display = 'inline-block';
+    userInfo.style.display = 'none';
+  }
+}
+
+// Crear un usuario predefinido para el propietario
+function createDefaultUser() {
+  // Verificar si ya existe el usuario predefinido
+  let users = JSON.parse(localStorage.getItem('users')) || [];
+  const defaultUserEmail = 'arnavor@usuario.com';
+  
+  // Si no existe el usuario predefinido, crearlo
+  if (!users.some(user => user.email === defaultUserEmail)) {
+    const defaultUser = {
+      id: 'owner-' + Date.now().toString(),
+      name: 'Arnavor',
+      email: defaultUserEmail,
+      password: 'Reloj2024#',
+      isOwner: true
+    };
+    
+    users.push(defaultUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    console.log('Usuario predefinido creado con éxito');
+  }
+}
+
+// Llamar a la función para crear el usuario predefinido al cargar la página
+createDefaultUser();
+
+// Verificar estado de autenticación al cargar
+checkAuthStatus();
 
 </script>
 
@@ -1233,6 +1838,12 @@ function stopAlarmLoop(){
 </html>
 <!DOCTYPE html>
 <html lang="es">
+
+
+
+
+
+
 
 
 
